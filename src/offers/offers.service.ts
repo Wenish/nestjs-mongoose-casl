@@ -7,24 +7,38 @@ import * as Chance from 'chance';
 
 @Injectable()
 export class OffersService {
+    private chance = new Chance();
+
     constructor(
         @InjectModel(Offer.name)
         private offerModel: Model<OfferDocument>,
     ) { }
 
-    async create() {
-        const chance = new Chance();
+    create() {
         const offerToCreate = new this.offerModel({
-            title: chance.word(),
-            price: chance.integer({ min: 10, max: 1000 }),
-            creator: chance.integer({ min: 1, max: 3 })
+            title: this.chance.word(),
+            price: this.chance.integer({ min: 10, max: 1000 }),
+            creator: this.chance.integer({ min: 1, max: 3 })
         });
-
-        if(chance.bool()) {
-            offerToCreate.publishDate = chance.date();
+        if (this.chance.bool()) {
+            offerToCreate.publishDate = this.chance.date();
         }
-
-
         return offerToCreate.save()
+    }
+
+    update(id: string) {
+        return this.offerModel.findByIdAndUpdate(id, { title: this.chance.word(), price: this.chance.integer({ min: 10, max: 1000 }) }, { new: true })
+    }
+
+    findAll() {
+        return this.offerModel.find().exec();
+    }
+
+    findOne(id: string) {
+        return this.offerModel.findById(id).exec();
+    }
+
+    delete(id: string) {
+        return this.offerModel.findByIdAndDelete(id).exec()
     }
 }
