@@ -2,9 +2,6 @@ name: Build
 on:
   workflow_dispatch: {}
   push:
-defaults:
-  run:
-    working-directory: api-race-control
 jobs:
   build:
     runs-on: ubuntu-latest
