@@ -1,3 +1,5 @@
+[![Build](https://github.com/Wenish/nestjs-mongoose-casl/actions/workflows/build.yml/badge.svg)](https://github.com/Wenish/nestjs-mongoose-casl/actions/workflows/build.yml)
+
 ## Installation
 
 ```bash
