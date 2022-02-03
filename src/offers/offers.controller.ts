@@ -1,12 +1,14 @@
 import { Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { ApiResponse } from '@nestjs/swagger';
+import { CaslAbilityFactory } from 'src/casl/casl-ability.factory';
 import { OffersService } from './offers.service';
 import { Offer } from './schemas/offer.schema';
 
 @Controller('offers')
 export class OffersController {
     constructor(
-        private readonly offersService: OffersService
+        private readonly offersService: OffersService,
+        private readonly caslAbilityFactory: CaslAbilityFactory
     ) { }
 
     @Post()

@@ -4,12 +4,14 @@ import { AppController } from './app.controller';
 import configuration from './config/configuration';
 import { DatabaseModule } from './database/database.module';
 import { OffersModule } from './offers/offers.module';
+import { CaslModule } from './casl/casl.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ load: [configuration], isGlobal: true }),
     DatabaseModule,
-    OffersModule
+    OffersModule,
+    CaslModule
   ],
   controllers: [AppController],
   providers: [],
