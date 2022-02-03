@@ -1,6 +1,6 @@
-import { Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Controller, Delete, Get, NotFoundException, Param, Patch, Post, UnauthorizedException } from '@nestjs/common';
 import { ApiResponse } from '@nestjs/swagger';
-import { CaslAbilityFactory } from 'src/casl/casl-ability.factory';
+import { Action, CaslAbilityFactory } from 'src/casl/casl-ability.factory';
 import { OffersService } from './offers.service';
 import { Offer } from './schemas/offer.schema';
 
@@ -14,30 +14,83 @@ export class OffersController {
     @Post()
     @ApiResponse({ type: Offer })
     create() {
+        const user = {}
+        const ability = this.caslAbilityFactory.createForUser(user);
+        const canCreateOffers = ability.can(Action.Create, Offer);
+        console.log(this.timeString(),'can create offer', canCreateOffers)
+
+        if (!canCreateOffers) throw new UnauthorizedException();
+
         return this.offersService.create();
     }
 
     @Get()
     @ApiResponse({ type: Offer, isArray: true })
-    readAll() {
-        return this.offersService.findAll();
+    async readAll() {
+        const user = {
+            roles: ['SystemAdmin']
+        }
+        const ability = this.caslAbilityFactory.createForUser(user);
+        const canReadOffers = ability.can(Action.Read, Offer);
+        console.log(this.timeString(), 'can read offers', canReadOffers)
+
+        if (!canReadOffers) throw new UnauthorizedException();
+
+        return (await this.offersService.findAll()).filter((offer) => {
+            const canReadOffer = ability.can(Action.Read, offer)
+            console.log(offer.id)
+            console.log(this.timeString(),'can read offer', canReadOffer)
+            return canReadOffer
+        });
     }
 
     @Get(':id')
     @ApiResponse({ type: Offer })
-    read(@Param('id') id: string) {
-        return this.offersService.findOne(id);
+    async read(@Param('id') id: string) {
+        const user = {}
+        const ability = this.caslAbilityFactory.createForUser(user);
+        const offer = await this.offersService.findOne(id)
+        const canReadOffer = ability.can(Action.Read, offer)
+        console.log(this.timeString(),'can read offer', canReadOffer)
+
+        if (!canReadOffer) throw new UnauthorizedException();
+        if (!offer) throw new NotFoundException();
+
+        return offer;
     }
 
     @Patch(':id')
     @ApiResponse({ type: Offer })
-    update(@Param('id') id: string) {
+    async update(@Param('id') id: string) {
+        const user = {}
+        const ability = this.caslAbilityFactory.createForUser(user);
+        const offer = await this.offersService.findOne(id)
+        const canUpdateOffer = ability.can(Action.Update, offer)
+        console.log(this.timeString(),'can update offer', canUpdateOffer)
+
+        if (!canUpdateOffer) throw new UnauthorizedException();
+        if (!offer) throw new NotFoundException();
+        
         return this.offersService.update(id)
     }
 
     @Delete(':id')
     @ApiResponse({ type: Offer })
-    delete(@Param('id') id: string) {
+    async delete(@Param('id') id: string) {
+        const user = {}
+        const ability = this.caslAbilityFactory.createForUser(user);
+        const offer = await this.offersService.findOne(id)
+        const canDeleteOffer = ability.can(Action.Delete, offer)
+        console.log(this.timeString(),'can delete offer', canDeleteOffer)
+
+        if (!canDeleteOffer) throw new UnauthorizedException();
+        if (!offer) throw new NotFoundException();
+
         return this.offersService.delete(id);
+    }
+
+    private timeString() {
+        const date = new Date()
+        return `[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}]`
     }
 }
