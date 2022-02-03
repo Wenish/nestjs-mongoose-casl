@@ -7,8 +7,8 @@ export enum OfferStatus {
     Approved = 'Approved',
     Declined = 'Declined',
     Archived = 'Archived',
-  }
-  
+}
+
 
 export type OfferDocument = Offer & Document;
 
@@ -19,23 +19,29 @@ export type OfferDocument = Offer & Document;
     }
 })
 export class Offer {
-  @Prop({ required: true })
-  @ApiProperty()
-  title: string;
 
-  @Prop({ required: true })
-  @ApiProperty()
-  price: number;
+    @ApiProperty()
+    _id: string
 
-  @Prop({ default: OfferStatus.Created, enum: OfferStatus, required: true })
-  @ApiProperty()
-  status: OfferStatus;
+    @Prop({ required: true })
+    @ApiProperty()
+    title: string;
 
-  @Prop({ default: Date.now })
-  publishDate: Date
+    @Prop({ required: true })
+    @ApiProperty()
+    price: number;
 
-  @Prop({ required: true })
-  creator: string;
+    @Prop({ default: OfferStatus.Created, enum: OfferStatus, required: true })
+    @ApiProperty()
+    status: OfferStatus;
+
+    @Prop({ default: Date.now })
+    @ApiProperty()
+    publishDate: Date
+
+    @Prop({ required: true })
+    @ApiProperty()
+    creator: string;
 }
 
 export const OfferSchema = SchemaFactory.createForClass(Offer);

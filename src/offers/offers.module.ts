@@ -6,9 +6,7 @@ import { OffersService } from './offers.service';
 
 @Module({
     imports: [
-        MongooseModule.forFeature([
-            { name: Offer.name, schema: OfferSchema },
-        ])
+        MongooseModule.forFeature([{ name: Offer.name, schema: OfferSchema },])
     ],
     controllers: [OffersController],
     providers: [OffersService]
