@@ -1,0 +1,14 @@
+name: Build
+on:
+  workflow_dispatch: {}
+  push:
+defaults:
+  run:
+    working-directory: api-race-control
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: npm ci
+      - run: npm run build
