@@ -28,7 +28,7 @@ export class OffersController {
     @ApiResponse({ type: Offer, isArray: true })
     async readAll() {
         const user = {
-            roles: ['SystemAdmin']
+            // roles: ['SystemAdmin']
         }
         const ability = this.caslAbilityFactory.createForUser(user);
         const canReadOffers = ability.can(Action.Read, Offer);
