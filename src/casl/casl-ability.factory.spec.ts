@@ -36,6 +36,18 @@ describe('CaslAbilityFactory', () => {
     expect(canCreateOffers).toBeTruthy()
   })
 
+  it('offer should be "Offer"', () => {
+    const OfferModel = model<Offer>(Offer.name, OfferSchema);
+    const offer = new OfferModel({
+      title: chance.word(),
+      price: chance.integer({ min: 10, max: 1000 }),
+      creator: chance.integer({ min: 1, max: 3 }),
+      status: OfferStatus.Approved
+    })
+    // @ts-ignore
+    expect(offer.constructor.modelName).toBe('Offer')
+  })
+
   it('user should be able to read specific offer', () => {
     const OfferModel = model<Offer>(Offer.name, OfferSchema);
     const user = {}
