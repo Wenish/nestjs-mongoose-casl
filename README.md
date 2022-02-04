@@ -32,7 +32,5 @@ npm run start:dev
 npm run start:prod
 ```
 
-## Check the app
-
 The App should be available on `localhost:3001/api`
 
