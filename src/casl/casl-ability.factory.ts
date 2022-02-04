@@ -17,7 +17,7 @@ export type AppAbility = Ability<[Action, Subjects]>;
 @Injectable()
 export class CaslAbilityFactory {
     createForUser(user: any) {
-        const { can, cannot, build } = new AbilityBuilder(Ability);
+        const { can, cannot, build } = new AbilityBuilder<Ability<[Action, Subjects]>>(Ability as AbilityClass<AppAbility>);
 
         can(Action.Read, Offer, {
             publishDate: { $lte: new Date() },
