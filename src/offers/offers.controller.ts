@@ -1,6 +1,6 @@
 import { Controller, Delete, Get, NotFoundException, Param, Patch, Post, UnauthorizedException } from '@nestjs/common';
 import { ApiResponse } from '@nestjs/swagger';
-import { Action, CaslAbilityFactory } from 'src/casl/casl-ability.factory';
+import { Action, CaslAbilityFactory } from '../casl/casl-ability.factory';
 import { OffersService } from './offers.service';
 import { Offer } from './schemas/offer.schema';
 

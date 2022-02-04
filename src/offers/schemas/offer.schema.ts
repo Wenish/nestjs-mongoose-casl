@@ -20,9 +20,6 @@ export type OfferDocument = Offer & Document;
 })
 export class Offer {
 
-    @ApiProperty()
-    _id: string
-
     @Prop({ required: true })
     @ApiProperty()
     title: string;
