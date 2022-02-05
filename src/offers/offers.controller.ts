@@ -5,6 +5,7 @@ import { OffersService } from './offers.service';
 import { Offer, OfferDocument } from '../database/schemas/offer.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { toMongoQuery } from '@casl/mongoose';
 
 @Controller('offers')
 export class OffersController {
@@ -41,12 +42,9 @@ export class OffersController {
 
         if (!canReadOffers) throw new UnauthorizedException();
 
-        return (await this.offersService.findAll()).filter((offer) => {
-            const canReadOffer = ability.can(Action.Read, offer)
-            console.log(offer.id)
-            console.log(this.timeString(),'can read offer', canReadOffer)
-            return canReadOffer
-        });
+        const query = toMongoQuery(ability, this.offerModel, Action.Read);
+
+        return this.offersService.findAll(query);
     }
 
     @Get(':id')
@@ -69,7 +67,9 @@ export class OffersController {
     @Patch(':id')
     @ApiResponse({ type: Offer })
     async update(@Param('id') id: string) {
-        const user = {}
+        const user = {
+            uid: '3'
+        }
         const ability = this.caslAbilityFactory.createForUser(user);
         const offer = await this.offersService.findOne(id)
         const canUpdateOffer = ability.can(Action.Update, offer)

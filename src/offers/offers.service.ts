@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Callback, Model } from 'mongoose';
 import { Offer, OfferDocument, OfferStatus } from '../database/schemas/offer.schema';
 import * as Chance from 'chance';
 
@@ -32,8 +32,9 @@ export class OffersService {
         return this.offerModel.findByIdAndUpdate(id, { title: this.chance.word(), price: this.chance.integer({ min: 10, max: 1000 }), status: newStatus }, { new: true })
     }
 
-    findAll() {
-        return this.offerModel.find().exec();
+    findAll(query) {
+        this.offerModel.find()
+        return this.offerModel.find(query).exec();
     }
 
     findOne(id: string) {
