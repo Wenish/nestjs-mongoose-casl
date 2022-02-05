@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { model } from 'mongoose';
-import { Offer, OfferSchema, OfferStatus } from '../offers/schemas/offer.schema';
+import { Offer, OfferModel, OfferSchema, OfferStatus } from '../offers/schemas/offer.schema';
 import { Action, CaslAbilityFactory } from './casl-ability.factory';
 import * as Chance from 'chance';
 
@@ -25,19 +25,18 @@ describe('CaslAbilityFactory', () => {
   it('user should be able to read offers', () => {
     const user = {}
     const ability = caslAbilityFactory.createForUser(user)
-    const canReadOffers = ability.can(Action.Read, Offer)
+    const canReadOffers = ability.can(Action.Read, OfferModel)
     expect(canReadOffers).toBeTruthy()
   })
 
   it('user should be able to create offers', () => {
     const user = {}
     const ability = caslAbilityFactory.createForUser(user)
-    const canCreateOffers = ability.can(Action.Create, Offer)
+    const canCreateOffers = ability.can(Action.Create, OfferModel)
     expect(canCreateOffers).toBeTruthy()
   })
 
   it('offer should be "Offer"', () => {
-    const OfferModel = model<Offer>(Offer.name, OfferSchema);
     const offer = new OfferModel({
       title: chance.word(),
       price: chance.integer({ min: 10, max: 1000 }),
@@ -49,7 +48,6 @@ describe('CaslAbilityFactory', () => {
   })
 
   it('user should be able to read specific offer', () => {
-    const OfferModel = model<Offer>(Offer.name, OfferSchema);
     const user = {}
     const offer = new OfferModel({
       title: chance.word(),

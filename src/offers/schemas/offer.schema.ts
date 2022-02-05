@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { Document } from 'mongoose';
+import { Document, model } from 'mongoose';
 
 export enum OfferStatus {
     Created = 'Created',
@@ -42,3 +42,5 @@ export class Offer {
 }
 
 export const OfferSchema = SchemaFactory.createForClass(Offer);
+
+export const OfferModel = model<OfferDocument>(Offer.name, OfferSchema)

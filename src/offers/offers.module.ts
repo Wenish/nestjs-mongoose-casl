@@ -7,7 +7,7 @@ import { CaslModule } from 'src/casl/casl.module';
 
 @Module({
     imports: [
-        MongooseModule.forFeature([{ name: Offer.name, schema: OfferSchema },]),
+        MongooseModule.forFeature([{ name: Offer.name, schema: OfferSchema},]),
         CaslModule
     ],
     controllers: [OffersController],
