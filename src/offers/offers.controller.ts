@@ -1,9 +1,8 @@
-import { toMongoQuery } from '@casl/mongoose';
 import { Controller, Delete, Get, NotFoundException, Param, Patch, Post, UnauthorizedException } from '@nestjs/common';
 import { ApiResponse } from '@nestjs/swagger';
 import { Action, CaslAbilityFactory } from '../casl/casl-ability.factory';
 import { OffersService } from './offers.service';
-import { Offer, OfferModel } from './schemas/offer.schema';
+import { Offer } from './schemas/offer.schema';
 
 @Controller('offers')
 export class OffersController {
@@ -17,7 +16,7 @@ export class OffersController {
     create() {
         const user = {}
         const ability = this.caslAbilityFactory.createForUser(user);
-        const canCreateOffers = ability.can(Action.Create, OfferModel);
+        const canCreateOffers = ability.can(Action.Create, Offer);
         console.log(this.timeString(),'can create offer', canCreateOffers)
 
         if (!canCreateOffers) throw new UnauthorizedException();
@@ -29,26 +28,26 @@ export class OffersController {
     @ApiResponse({ type: Offer, isArray: true })
     async readAll() {
         const user = {
-            uid: 3
             // roles: ['SystemAdmin']
         }
         const ability = this.caslAbilityFactory.createForUser(user);
-        const canReadOffers = ability.can(Action.Read, OfferModel);
+        const canReadOffers = ability.can(Action.Read, Offer);
         console.log(this.timeString(), 'can read offers', canReadOffers)
 
         if (!canReadOffers) throw new UnauthorizedException();
 
-        const query = toMongoQuery(ability, OfferModel, Action.Read)
-        
-        return this.offersService.findAll(query)
+        return (await this.offersService.findAll()).filter((offer) => {
+            const canReadOffer = ability.can(Action.Read, offer)
+            console.log(offer.id)
+            console.log(this.timeString(),'can read offer', canReadOffer)
+            return canReadOffer
+        });
     }
 
     @Get(':id')
     @ApiResponse({ type: Offer })
     async read(@Param('id') id: string) {
-        const user = {
-          uid: 3
-        }
+        const user = {}
         const ability = this.caslAbilityFactory.createForUser(user);
         const offer = await this.offersService.findOne(id)
         const canReadOffer = ability.can(Action.Read, offer)

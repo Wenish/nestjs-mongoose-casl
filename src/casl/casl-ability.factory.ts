@@ -1,6 +1,6 @@
 import { InferSubjects, Ability, AbilityBuilder, AbilityClass, ExtractSubjectType } from "@casl/ability";
 import { Injectable } from "@nestjs/common";
-import { OfferModel, OfferStatus } from "../offers/schemas/offer.schema";
+import { Offer, OfferStatus } from "../offers/schemas/offer.schema";
 
 export enum Action {
     Manage = 'manage',
@@ -10,7 +10,7 @@ export enum Action {
     Delete = 'delete',
 }
 
-type Subjects = InferSubjects<typeof OfferModel> | 'all';
+type Subjects = InferSubjects<typeof Offer, true> | 'all';
 
 export type AppAbility = Ability<[Action, Subjects]>;
 
@@ -19,23 +19,22 @@ export class CaslAbilityFactory {
     createForUser(user: any) {
         const { can, cannot, build } = new AbilityBuilder<Ability<[Action, Subjects]>>(Ability as AbilityClass<AppAbility>);
 
-        can(Action.Read, OfferModel, {
+        can(Action.Read, Offer, {
             publishDate: { $lte: new Date() },
             status: { $in: [OfferStatus.Approved] },
         });
 
-        can(Action.Create, OfferModel);
-        console.log(user)
+        can(Action.Create, Offer);
+
         if (user) {
             if (user?.uid) {
-                console.log('yeeep')
-                can(Action.Manage, OfferModel, { creator: user.uid });
+                can(Action.Manage, Offer, { creator: user.uid });
             }
 
             const userRoles: Role[] = user?.roles || [];
 
             if (userRoles.includes(Role.CONTENT_MANAGER)) {
-                can(Action.Manage, OfferModel);
+                can(Action.Manage, Offer);
             }
 
             if (userRoles.includes(Role.SYSTEM_ADMIN)) {
