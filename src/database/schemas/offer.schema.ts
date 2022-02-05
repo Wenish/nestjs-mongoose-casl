@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
+import { Exclude } from 'class-transformer';
 import { Document } from 'mongoose';
 
 export enum OfferStatus {
@@ -16,8 +17,15 @@ export type OfferDocument = Offer & Document;
     createdAt: true,
     updatedAt: true,
   },
+  toJSON: {
+    virtuals: true
+  }
+
 })
 export class Offer {
+  @ApiProperty()
+  id: string;
+
   @Prop({ required: true })
   @ApiProperty()
   title: string;
