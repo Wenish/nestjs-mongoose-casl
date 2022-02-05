@@ -5,11 +5,8 @@ import { CaslModule } from '../casl/casl.module';
 import { DatabaseModule } from '../database/database.module';
 
 @Module({
-    imports: [
-        DatabaseModule,
-        CaslModule
-    ],
-    controllers: [OffersController],
-    providers: [OffersService]
+  imports: [DatabaseModule, CaslModule],
+  controllers: [OffersController],
+  providers: [OffersService],
 })
-export class OffersModule { }
+export class OffersModule {}

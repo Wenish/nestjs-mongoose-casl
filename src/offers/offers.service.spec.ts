@@ -11,10 +11,10 @@ describe('OffersService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         OffersService,
-        { 
-          provide: getModelToken(Offer.name), 
-          useValue: Model
-        }
+        {
+          provide: getModelToken(Offer.name),
+          useValue: Model,
+        },
       ],
     }).compile();
 

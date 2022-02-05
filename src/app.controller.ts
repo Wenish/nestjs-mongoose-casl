@@ -6,6 +6,6 @@ export class AppController {
 
   @Get()
   status(): string {
-    return 'App Running...'
+    return 'App Running...';
   }
 }

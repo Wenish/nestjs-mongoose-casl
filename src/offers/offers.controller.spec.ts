@@ -13,13 +13,13 @@ describe('OffersController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [OffersController],
       providers: [
-        { 
-          provide: getModelToken(Offer.name), 
-          useValue: Model
+        {
+          provide: getModelToken(Offer.name),
+          useValue: Model,
         },
         OffersService,
-        CaslAbilityFactory
-      ]
+        CaslAbilityFactory,
+      ],
     }).compile();
 
     controller = module.get<OffersController>(OffersController);

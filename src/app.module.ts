@@ -14,13 +14,13 @@ import { DatabaseModule } from './database/database.module';
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         uri: configService.get<string>('database.mongodb.uri'),
-        dbName: configService.get<string>('database.mongodb.name')
+        dbName: configService.get<string>('database.mongodb.name'),
       }),
       inject: [ConfigService],
     }),
     OffersModule,
     CaslModule,
-    DatabaseModule
+    DatabaseModule,
   ],
   controllers: [AppController],
   providers: [],

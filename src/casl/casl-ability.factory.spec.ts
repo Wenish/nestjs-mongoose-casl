@@ -3,7 +3,11 @@ import { Model, model } from 'mongoose';
 import { Action, CaslAbilityFactory } from './casl-ability.factory';
 import * as Chance from 'chance';
 import { getModelToken } from '@nestjs/mongoose';
-import { Offer, OfferDocument, OfferStatus } from '../database/schemas/offer.schema';
+import {
+  Offer,
+  OfferDocument,
+  OfferStatus,
+} from '../database/schemas/offer.schema';
 
 describe('CaslAbilityFactory', () => {
   const chance = new Chance();
@@ -11,7 +15,7 @@ describe('CaslAbilityFactory', () => {
     title: chance.word(),
     price: chance.integer({ min: 10, max: 1000 }),
     creator: chance.integer({ min: 1, max: 3 }),
-    status: OfferStatus.Approved
+    status: OfferStatus.Approved,
   };
 
   let caslAbilityFactory: CaslAbilityFactory;
@@ -21,11 +25,11 @@ describe('CaslAbilityFactory', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         CaslAbilityFactory,
-        { 
-          provide: getModelToken(Offer.name), 
-          useValue: Model
-        }
-      ]
+        {
+          provide: getModelToken(Offer.name),
+          useValue: Model,
+        },
+      ],
     }).compile();
 
     caslAbilityFactory = module.get<CaslAbilityFactory>(CaslAbilityFactory);
@@ -37,24 +41,24 @@ describe('CaslAbilityFactory', () => {
   });
 
   it('user should be able to read offers', () => {
-    const user = {}
-    const ability = caslAbilityFactory.createForUser(user)
-    const canReadOffers = ability.can(Action.Read, offerModel)
-    expect(canReadOffers).toBeTruthy()
-  })
+    const user = {};
+    const ability = caslAbilityFactory.createForUser(user);
+    const canReadOffers = ability.can(Action.Read, offerModel);
+    expect(canReadOffers).toBeTruthy();
+  });
 
   it('user should be able to create offers', () => {
-    const user = {}
-    const ability = caslAbilityFactory.createForUser(user)
-    const canCreateOffers = ability.can(Action.Create, offerModel)
-    expect(canCreateOffers).toBeTruthy()
-  })
+    const user = {};
+    const ability = caslAbilityFactory.createForUser(user);
+    const canCreateOffers = ability.can(Action.Create, offerModel);
+    expect(canCreateOffers).toBeTruthy();
+  });
 
   it('user should be able to read specific offer', () => {
-    const user = {}
-    const offer = new offerModel(mockOffer)
-    const ability = caslAbilityFactory.createForUser(user)
-    const canReadOffer = ability.can(Action.Read, offer)
-    expect(canReadOffer).toBeTruthy()
-  })
+    const user = {};
+    const offer = new offerModel(mockOffer);
+    const ability = caslAbilityFactory.createForUser(user);
+    const canReadOffer = ability.can(Action.Read, offer);
+    expect(canReadOffer).toBeTruthy();
+  });
 });
