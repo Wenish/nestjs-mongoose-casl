@@ -32,6 +32,7 @@ export class OffersController {
     @ApiResponse({ type: Offer, isArray: true })
     async readAll() {
         const user = {
+            uid: '3'
             // roles: ['SystemAdmin']
         }
         const ability = this.caslAbilityFactory.createForUser(user);
@@ -51,7 +52,9 @@ export class OffersController {
     @Get(':id')
     @ApiResponse({ type: Offer })
     async read(@Param('id') id: string) {
-        const user = {}
+        const user = {
+            uid: '3'
+        }
         const ability = this.caslAbilityFactory.createForUser(user);
         const offer = await this.offersService.findOne(id)
         const canReadOffer = ability.can(Action.Read, offer)
@@ -81,7 +84,9 @@ export class OffersController {
     @Delete(':id')
     @ApiResponse({ type: Offer })
     async delete(@Param('id') id: string) {
-        const user = {}
+        const user = {
+            uid: '3'
+        }
         const ability = this.caslAbilityFactory.createForUser(user);
         const offer = await this.offersService.findOne(id)
         const canDeleteOffer = ability.can(Action.Delete, offer)

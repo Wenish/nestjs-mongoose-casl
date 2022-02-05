@@ -20,7 +20,7 @@ export class CaslAbilityFactory {
     ) { }
     
     createForUser(user: any) {
-        const { can, cannot, build } = new AbilityBuilder<Ability<[Action, InferSubjects<typeof this.offerModel> | 'all']>>(Ability as AbilityClass<Ability<[Action, InferSubjects<typeof this.offerModel> | 'all']>>);
+        const { can, cannot, build } = new AbilityBuilder(Ability as AbilityClass<Ability<[Action, InferSubjects<typeof this.offerModel> | 'all']>>);
 
         can(Action.Read, this.offerModel, {
             publishDate: { $lte: new Date() },
