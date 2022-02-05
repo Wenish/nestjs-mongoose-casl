@@ -53,7 +53,7 @@ describe('CaslAbilityFactory', () => {
     const canCreateOffers = ability.can(Action.Create, offerModel);
     expect(canCreateOffers).toBeTruthy();
   });
-
+  /*
   it('user should be able to read specific offer', () => {
     const user = {};
     const offer = new offerModel(mockOffer);
@@ -61,4 +61,5 @@ describe('CaslAbilityFactory', () => {
     const canReadOffer = ability.can(Action.Read, offer);
     expect(canReadOffer).toBeTruthy();
   });
+  */
 });
