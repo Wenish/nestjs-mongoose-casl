@@ -1,6 +1,8 @@
 import { InferSubjects, Ability, AbilityBuilder, AbilityClass, ExtractSubjectType } from "@casl/ability";
 import { Injectable } from "@nestjs/common";
-import { Offer, OfferStatus } from "../offers/schemas/offer.schema";
+import { InjectModel } from "@nestjs/mongoose";
+import { Model } from "mongoose";
+import { Offer, OfferDocument, OfferStatus } from "../database/schemas/offer.schema";
 
 export enum Action {
     Manage = 'manage',
@@ -10,31 +12,32 @@ export enum Action {
     Delete = 'delete',
 }
 
-type Subjects = InferSubjects<typeof Offer, true> | 'all';
-
-export type AppAbility = Ability<[Action, Subjects]>;
-
 @Injectable()
 export class CaslAbilityFactory {
+    constructor(
+        @InjectModel(Offer.name)
+        private offerModel: Model<OfferDocument>,
+    ) { }
+    
     createForUser(user: any) {
-        const { can, cannot, build } = new AbilityBuilder<Ability<[Action, Subjects]>>(Ability as AbilityClass<AppAbility>);
+        const { can, cannot, build } = new AbilityBuilder<Ability<[Action, InferSubjects<typeof this.offerModel> | 'all']>>(Ability as AbilityClass<Ability<[Action, InferSubjects<typeof this.offerModel> | 'all']>>);
 
-        can(Action.Read, Offer, {
+        can(Action.Read, this.offerModel, {
             publishDate: { $lte: new Date() },
             status: { $in: [OfferStatus.Approved] },
         });
 
-        can(Action.Create, Offer);
+        can(Action.Create, this.offerModel);
 
         if (user) {
             if (user?.uid) {
-                can(Action.Manage, Offer, { creator: user.uid });
+                can(Action.Manage, this.offerModel, { creator: user.uid });
             }
 
             const userRoles: Role[] = user?.roles || [];
 
             if (userRoles.includes(Role.CONTENT_MANAGER)) {
-                can(Action.Manage, Offer);
+                can(Action.Manage, this.offerModel);
             }
 
             if (userRoles.includes(Role.SYSTEM_ADMIN)) {
@@ -45,7 +48,7 @@ export class CaslAbilityFactory {
         return build({
             // Read https://casl.js.org/v5/en/guide/subject-type-detection#use-classes-as-subject-types for details
             detectSubjectType: object => {
-                return object.constructor as ExtractSubjectType<Subjects>
+                return object.constructor as ExtractSubjectType<InferSubjects<typeof this.offerModel> | 'all'>
             }
         });
     }

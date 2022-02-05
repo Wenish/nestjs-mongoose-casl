@@ -2,11 +2,15 @@ import { Controller, Delete, Get, NotFoundException, Param, Patch, Post, Unautho
 import { ApiResponse } from '@nestjs/swagger';
 import { Action, CaslAbilityFactory } from '../casl/casl-ability.factory';
 import { OffersService } from './offers.service';
-import { Offer } from './schemas/offer.schema';
+import { Offer, OfferDocument } from '../database/schemas/offer.schema';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
 
 @Controller('offers')
 export class OffersController {
     constructor(
+        @InjectModel(Offer.name)
+        private offerModel: Model<OfferDocument>,
         private readonly offersService: OffersService,
         private readonly caslAbilityFactory: CaslAbilityFactory
     ) { }
@@ -16,7 +20,7 @@ export class OffersController {
     create() {
         const user = {}
         const ability = this.caslAbilityFactory.createForUser(user);
-        const canCreateOffers = ability.can(Action.Create, Offer);
+        const canCreateOffers = ability.can(Action.Create, this.offerModel);
         console.log(this.timeString(),'can create offer', canCreateOffers)
 
         if (!canCreateOffers) throw new UnauthorizedException();
@@ -31,7 +35,7 @@ export class OffersController {
             // roles: ['SystemAdmin']
         }
         const ability = this.caslAbilityFactory.createForUser(user);
-        const canReadOffers = ability.can(Action.Read, Offer);
+        const canReadOffers = ability.can(Action.Read, this.offerModel);
         console.log(this.timeString(), 'can read offers', canReadOffers)
 
         if (!canReadOffers) throw new UnauthorizedException();

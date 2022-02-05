@@ -5,6 +5,7 @@ import configuration from './config/configuration';
 import { OffersModule } from './offers/offers.module';
 import { CaslModule } from './casl/casl.module';
 import { MongooseModule } from '@nestjs/mongoose';
+import { DatabaseModule } from './database/database.module';
 
 @Module({
   imports: [
@@ -18,7 +19,8 @@ import { MongooseModule } from '@nestjs/mongoose';
       inject: [ConfigService],
     }),
     OffersModule,
-    CaslModule
+    CaslModule,
+    DatabaseModule
   ],
   controllers: [AppController],
   providers: [],

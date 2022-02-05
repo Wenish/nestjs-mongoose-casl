@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Offer, OfferDocument, OfferStatus } from './schemas/offer.schema';
+import { Offer, OfferDocument, OfferStatus } from '../database/schemas/offer.schema';
 import * as Chance from 'chance';
 
 
