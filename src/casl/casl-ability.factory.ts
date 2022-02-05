@@ -30,7 +30,7 @@ export class CaslAbilityFactory {
   ) {}
 
   createForUser(user: any) {
-    const { can, cannot, build } = new AbilityBuilder(
+    const { can, build } = new AbilityBuilder(
       Ability as AbilityClass<
         Ability<[Action, InferSubjects<typeof this.offerModel> | 'all']>
       >,

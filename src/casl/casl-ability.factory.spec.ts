@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { Model, model } from 'mongoose';
+import { Model } from 'mongoose';
 import { Action, CaslAbilityFactory } from './casl-ability.factory';
 import * as Chance from 'chance';
 import { getModelToken } from '@nestjs/mongoose';
@@ -11,12 +11,14 @@ import {
 
 describe('CaslAbilityFactory', () => {
   const chance = new Chance();
+  /*
   const mockOffer = {
     title: chance.word(),
     price: chance.integer({ min: 10, max: 1000 }),
     creator: chance.integer({ min: 1, max: 3 }),
     status: OfferStatus.Approved,
   };
+  */
 
   let caslAbilityFactory: CaslAbilityFactory;
   let offerModel: Model<OfferDocument>;
