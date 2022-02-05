@@ -18,9 +18,8 @@ export type OfferDocument = Offer & Document;
     updatedAt: true,
   },
   toJSON: {
-    virtuals: true
-  }
-
+    virtuals: true,
+  },
 })
 export class Offer {
   @ApiProperty()
