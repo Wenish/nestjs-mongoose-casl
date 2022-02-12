@@ -47,9 +47,8 @@ export class OffersService {
     );
   }
 
-  findAll(query: FilterQuery<OfferDocument> = {}) {
-    this.offerModel.find();
-    return this.offerModel.find(query).exec();
+  findAll(query: FilterQuery<OfferDocument> = {}, skip: number = 0, limit: number = 10) {
+    return this.offerModel.find(query).skip(skip).limit(limit).exec();
   }
 
   findOne(id: string) {

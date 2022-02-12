@@ -41,12 +41,22 @@ export class OffersController {
 
   @Get()
   @ApiQuery({
-    name: "q",
+    name: 'q',
     type: String,
     required: false
   })
+  @ApiQuery({
+    name: 'skip',
+    type: Number,
+    required: false
+  })
+  @ApiQuery({
+    name: 'limit',
+    type: Number,
+    required: false
+  })
   @ApiResponse({ type: Offer, isArray: true })
-  async readAll(@Query('q') q?: string) {
+  async readAll(@Query('q') q: string = '', @Query('skip') skip: number = 0, @Query('limit') limit: number = 10) {
     const user = {
       uid: '3',
       // roles: ['SystemAdmin']
@@ -65,7 +75,7 @@ export class OffersController {
       }]
     }
 
-    return this.offersService.findAll(query);
+    return this.offersService.findAll(query, skip, limit);
   }
 
   @Get(':id')
