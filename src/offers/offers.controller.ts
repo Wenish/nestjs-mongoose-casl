@@ -24,7 +24,7 @@ export class OffersController {
     private offerModel: Model<OfferDocument>,
     private readonly offersService: OffersService,
     private readonly caslAbilityFactory: CaslAbilityFactory,
-  ) { }
+  ) {}
 
   @Post()
   @ApiResponse({ type: Offer })
@@ -43,20 +43,24 @@ export class OffersController {
   @ApiQuery({
     name: 'q',
     type: String,
-    required: false
+    required: false,
   })
   @ApiQuery({
     name: 'skip',
     type: Number,
-    required: false
+    required: false,
   })
   @ApiQuery({
     name: 'limit',
     type: Number,
-    required: false
+    required: false,
   })
   @ApiResponse({ type: Offer, isArray: true })
-  async readAll(@Query('q') q: string = '', @Query('skip') skip: number = 0, @Query('limit') limit: number = 10) {
+  async readAll(
+    @Query('q') q: string = '',
+    @Query('skip') skip: number = 0,
+    @Query('limit') limit: number = 10,
+  ) {
     const user = {
       uid: '3',
       // roles: ['SystemAdmin']
@@ -67,13 +71,15 @@ export class OffersController {
 
     if (!canReadOffers) throw new UnauthorizedException();
 
-    const reg = new RegExp(q, 'gim')
+    const reg = new RegExp(q, 'gim');
     const query = {
       ...toMongoQuery(ability, this.offerModel, Action.Read),
-      $and: [{
-        title: { $regex: reg }
-      }]
-    }
+      $and: [
+        {
+          title: { $regex: reg },
+        },
+      ],
+    };
 
     return this.offersService.findAll(query, skip, limit);
   }
