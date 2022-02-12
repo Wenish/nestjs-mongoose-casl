@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { FilterQuery, Model } from 'mongoose';
 import {
   Offer,
   OfferDocument,
@@ -47,7 +47,7 @@ export class OffersService {
     );
   }
 
-  findAll(query) {
+  findAll(query: FilterQuery<OfferDocument> = {}) {
     this.offerModel.find();
     return this.offerModel.find(query).exec();
   }

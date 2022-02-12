@@ -6,9 +6,10 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UnauthorizedException,
 } from '@nestjs/common';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { Action, CaslAbilityFactory } from '../casl/casl-ability.factory';
 import { OffersService } from './offers.service';
 import { Offer, OfferDocument } from '../database/schemas/offer.schema';
@@ -23,7 +24,7 @@ export class OffersController {
     private offerModel: Model<OfferDocument>,
     private readonly offersService: OffersService,
     private readonly caslAbilityFactory: CaslAbilityFactory,
-  ) {}
+  ) { }
 
   @Post()
   @ApiResponse({ type: Offer })
@@ -39,8 +40,13 @@ export class OffersController {
   }
 
   @Get()
+  @ApiQuery({
+    name: "q",
+    type: String,
+    required: false
+  })
   @ApiResponse({ type: Offer, isArray: true })
-  async readAll() {
+  async readAll(@Query('q') q?: string) {
     const user = {
       uid: '3',
       // roles: ['SystemAdmin']
@@ -51,7 +57,13 @@ export class OffersController {
 
     if (!canReadOffers) throw new UnauthorizedException();
 
-    const query = toMongoQuery(ability, this.offerModel, Action.Read);
+    const reg = new RegExp(q, 'gim')
+    const query = {
+      ...toMongoQuery(ability, this.offerModel, Action.Read),
+      $and: [{
+        title: { $regex: reg }
+      }]
+    }
 
     return this.offersService.findAll(query);
   }

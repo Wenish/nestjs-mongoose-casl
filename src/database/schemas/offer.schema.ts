@@ -24,7 +24,7 @@ export class Offer {
   @ApiProperty()
   id: string;
 
-  @Prop({ required: true })
+  @Prop({ required: true, index: true })
   @ApiProperty()
   title: string;
 
