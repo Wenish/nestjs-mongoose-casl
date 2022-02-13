@@ -12,7 +12,7 @@ import {
 import { ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { Action, CaslAbilityFactory } from '../casl/casl-ability.factory';
 import { OffersService } from './offers.service';
-import { Offer, OfferDocument } from '../database/schemas/offer.schema';
+import { Offer, OfferDocument, OfferStatus } from '../database/schemas/offer.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { toMongoQuery } from '@casl/mongoose';
@@ -55,15 +55,21 @@ export class OffersController {
     type: Number,
     required: false,
   })
+  @ApiQuery({
+    name: 'status',
+    enum: OfferStatus,
+    required: false,
+  })
   @ApiResponse({ type: Offer, isArray: true })
   async readAll(
     @Query('q') q: string = '',
     @Query('skip') skip: number = 0,
     @Query('limit') limit: number = 10,
+    @Query('status') status: OfferStatus = null,
   ) {
     const user = {
       uid: '3',
-      // roles: ['SystemAdmin']
+      roles: ['SystemAdmin']
     };
     const ability = this.caslAbilityFactory.createForUser(user);
     const canReadOffers = ability.can(Action.Read, this.offerModel);
@@ -71,12 +77,12 @@ export class OffersController {
 
     if (!canReadOffers) throw new UnauthorizedException();
 
-    const reg = new RegExp(q, 'gim');
     const query = {
       ...toMongoQuery(ability, this.offerModel, Action.Read),
       $and: [
         {
-          title: { $regex: reg },
+          title: { $regex: new RegExp(q, 'gim') },
+          status: { $regex: new RegExp(status || '') }
         },
       ],
     };
