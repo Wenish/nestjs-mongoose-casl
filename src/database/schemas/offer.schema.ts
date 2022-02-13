@@ -46,3 +46,6 @@ export class Offer {
 }
 
 export const OfferSchema = SchemaFactory.createForClass(Offer);
+
+OfferSchema.index({"createdAt": -1});
+OfferSchema.index({"updatedAt": -1});

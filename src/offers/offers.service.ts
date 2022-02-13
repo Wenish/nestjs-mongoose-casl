@@ -52,7 +52,7 @@ export class OffersService {
     skip: number = 0,
     limit: number = 10,
   ) {
-    return this.offerModel.find(query).skip(skip).limit(limit).exec();
+    return this.offerModel.find(query).skip(skip).limit(limit).sort({createdAt: -1}).exec();
   }
 
   findOne(id: string) {
