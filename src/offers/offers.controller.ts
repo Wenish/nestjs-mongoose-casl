@@ -13,7 +13,7 @@ import { ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { Action, CaslAbilityFactory } from '../casl/casl-ability.factory';
 import { OffersService } from './offers.service';
 import { Offer, OfferDocument, OfferStatus } from '../database/schemas/offer.schema';
-import { Model } from 'mongoose';
+import { FilterQuery, Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { toMongoQuery } from '@casl/mongoose';
 
@@ -56,6 +56,11 @@ export class OffersController {
     required: false,
   })
   @ApiQuery({
+    name: 'creator',
+    type: String,
+    required: false,
+  })
+  @ApiQuery({
     name: 'status',
     enum: OfferStatus,
     required: false,
@@ -65,11 +70,12 @@ export class OffersController {
     @Query('q') q: string = '',
     @Query('skip') skip: number = 0,
     @Query('limit') limit: number = 10,
+    @Query('creator') creator: string = '',
     @Query('status') status: OfferStatus = null,
   ) {
     const user = {
       uid: '3',
-      roles: ['SystemAdmin']
+      // roles: ['SystemAdmin']
     };
     const ability = this.caslAbilityFactory.createForUser(user);
     const canReadOffers = ability.can(Action.Read, this.offerModel);
@@ -77,7 +83,7 @@ export class OffersController {
 
     if (!canReadOffers) throw new UnauthorizedException();
 
-    const query = {
+    const query: FilterQuery<OfferDocument> = {
       ...toMongoQuery(ability, this.offerModel, Action.Read),
       $and: [
         {
@@ -86,6 +92,10 @@ export class OffersController {
         },
       ],
     };
+
+    if(creator) {
+      query.creator = creator
+    }
 
     return this.offersService.findAll(query, skip, limit);
   }
