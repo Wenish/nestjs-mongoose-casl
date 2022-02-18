@@ -16,15 +16,30 @@ import { Offer, OfferDocument, OfferStatus } from '../database/schemas/offer.sch
 import { FilterQuery, Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { toMongoQuery } from '@casl/mongoose';
+import { Auction, AuctionDocument } from 'src/database/schemas/auction.schema';
+import { doc } from 'prettier';
 
 @Controller('offers')
 export class OffersController {
   constructor(
     @InjectModel(Offer.name)
     private offerModel: Model<OfferDocument>,
+    @InjectModel(Auction.name)
+    private auctionModel: Model<AuctionDocument>,
     private readonly offersService: OffersService,
     private readonly caslAbilityFactory: CaslAbilityFactory,
   ) {}
+
+  @Get('auctionGetter')
+  superGetter() {
+    const auctionToCreate = new this.auctionModel({
+      title: 'test',
+      price: 2432,
+      creator: 3,
+      startBid: 420
+    });
+    return auctionToCreate.save()
+  }
 
   @Post()
   @ApiResponse({ type: Offer })
