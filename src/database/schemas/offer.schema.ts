@@ -9,6 +9,11 @@ export enum OfferStatus {
   Archived = 'Archived',
 }
 
+export enum OfferType {
+  Offer = 'Offer',
+  Auction = 'Auction'
+}
+
 export type OfferDocument = Offer & Document;
 
 @Schema({

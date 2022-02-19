@@ -12,7 +12,7 @@ import {
 import { ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { Action, CaslAbilityFactory } from '../casl/casl-ability.factory';
 import { OffersService } from './offers.service';
-import { Offer, OfferDocument, OfferStatus } from '../database/schemas/offer.schema';
+import { Offer, OfferDocument, OfferStatus, OfferType } from '../database/schemas/offer.schema';
 import { FilterQuery, Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { toMongoQuery } from '@casl/mongoose';
@@ -30,8 +30,8 @@ export class OffersController {
     private readonly caslAbilityFactory: CaslAbilityFactory,
   ) {}
 
-  @Get('auctionGetter')
-  superGetter() {
+  @Post('auction')
+  createAuction() {
     const auctionToCreate = new this.auctionModel({
       title: 'test',
       price: 2432,
@@ -39,6 +39,13 @@ export class OffersController {
       startBid: 420
     });
     return auctionToCreate.save()
+  }
+
+  @Get('auction')
+  getAuction() {
+    return this.auctionModel.find({
+      type: OfferType.Auction
+    }).exec()
   }
 
   @Post()
