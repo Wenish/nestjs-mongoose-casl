@@ -24,6 +24,7 @@ export type OfferDocument = Offer & Document;
   toJSON: {
     virtuals: true,
   },
+  discriminatorKey: 'type'
 })
 export class Offer {
   @ApiProperty()
@@ -40,6 +41,9 @@ export class Offer {
   @Prop({ default: OfferStatus.Created, enum: OfferStatus, required: true })
   @ApiProperty()
   status: OfferStatus;
+
+  @Prop({ default: 'Offer'})
+  type: string;
 
   @Prop({ default: Date.now })
   @ApiProperty()
