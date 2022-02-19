@@ -7,16 +7,16 @@ import { Offer, OfferDocument, OfferSchema } from './schemas/offer.schema';
 @Module({
   imports: [
     MongooseModule.forFeature([
-      { name: Offer.name, schema: OfferSchema }
+      {
+        name: Offer.name, schema: OfferSchema, discriminators: [
+          {
+            name: Auction.name,
+            schema: AuctionSchema
+          }
+        ]
+      }
     ]),
   ],
-  providers: [
-    {
-      provide: getModelToken(Auction.name),
-      useFactory: (offerModel: Model<OfferDocument>) => offerModel.discriminator(Auction.name, AuctionSchema),
-      inject: [getModelToken(Offer.name)]
-     }
-  ],
-  exports: [MongooseModule, getModelToken(Auction.name)],
+  exports: [MongooseModule],
 })
-export class DatabaseModule {}
+export class DatabaseModule { }
